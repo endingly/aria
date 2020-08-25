@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Security;
 using System.Text;
 using System.Threading;
 
@@ -201,7 +204,7 @@ namespace aria
                     {
                         File.OpenRead(segFilename);
                     }
-                    catch
+                    catch(FileNotFoundException)
                     {
                         throw new FileNotFoundException();
                     }
@@ -212,7 +215,7 @@ namespace aria
                     {
                         File.OpenWrite(segFilename);
                     }
-                    catch
+                    catch(DirectoryNotFoundException)
                     {
                         throw new DirectoryNotFoundException();
                     }
@@ -233,32 +236,46 @@ namespace aria
             FileStream segFile = openSegFile(segFilename, "r+");
         }
 
+        /// <summary>
+        /// 以二进制流的形式存储对象
+        /// </summary>
         public void Save()
         {
             if (!isSplittable)
                 return;
             logger.Info(Message.MSG_SAVING_SEGMENT_FILE, SegmentFilePath);
-            foreach (char item in segments.ToString())
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            FileStream segFile = new FileStream(SegmentFilePath, FileMode.Create);
+            try
             {
-                
+                binaryFormatter.Serialize(segFile, segments);
             }
-            File.WriteAllBytes(SegmentFilePath, segments.ToString());
-            byte.Parse(segments.ToString());
-            
+            catch (SerializationException)
+            {
+                throw new SerializationException();
+            }
+            segFile.Close();
+            logger.Info(Message.MSG_SAVED_SEGMENT_FILE);
         }
 
-        // TODO:重写整个函数
-        unsafe public void Read(ref FileStream fileStream)
+        /// <summary>
+        /// 读取整个对象的二进制流并在程序中反序列化
+        /// </summary>
+        /// <param name="fileStream">指定文件的路径</param>
+        public void Read(ref FileStream fileStream)
         {
             if (fileStream == null)
                 logger.Error("file stream is null!");
-            while (true)
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            try
             {
-                Segment seg = new Segment();
-                long size = GC.GetTotalMemory(false);
+                segments = (List<Segment>)binaryFormatter.Deserialize(fileStream);
+            }
+            catch(SerializationException)
+            {
+                throw new SerializationException();
             }
         }
-
 
         public void Remove()
         {

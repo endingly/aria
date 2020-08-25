@@ -14,6 +14,7 @@ namespace aria
     /// ds is downloaded bytes.
     /// If a download of this segement is complete, finish must be set to true.
     /// </summary>
+    [Serializable]
     class Segment
     {
         public int cuid;
