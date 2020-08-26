@@ -1,5 +1,10 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Timers;
@@ -36,10 +41,19 @@ namespace aria
             }
         }
 
-        // TODO : 将要补充
+        /// <summary>
+        /// 侦听可用的socket
+        /// </summary>
         private void waitDate()
         {
-
+            Collection<Socket> rfds = new Collection<Socket>();
+            Collection<Socket> wfds = new Collection<Socket>();
+            int microSeconds = 1000;
+            foreach (Socket item in rsockets)
+                rfds.Add(item);   
+            foreach (Socket item in wsockets) 
+                wfds.Add(item);
+            Socket.Select(rfds,wfds,null,microSeconds);
         }
 
         private bool addSocket(ref List<Socket> sockets, Socket socket)
