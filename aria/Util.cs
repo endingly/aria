@@ -108,6 +108,22 @@ namespace aria
             }
         }
 
+        // 重构
+        internal static void Split(ref KeyValuePair<string, string> hp, string src, char delim)
+        {
+            int p = src.IndexOf(delim);
+            if (p == -1)
+            {
+                KeyValuePair<string, string> tmp = new KeyValuePair<string, string>(src, " ");
+                hp = tmp;
+            }
+            else
+            {
+                KeyValuePair<string, string> tmp = new KeyValuePair<string, string>(Trim(src.Substring(0, p)), Trim(src.Substring(p + 1)));
+                hp = tmp;
+            }
+        }
+
         /// <summary>
         /// 计算两个参数之间的时间差，以此判断哪个参数较为新
         /// 如果tv1旧于tv2，那么就返回0
@@ -117,9 +133,9 @@ namespace aria
         /// <returns></returns>
         internal static uint Difftv(TimeSpan tv1, TimeSpan tv2)
         {
-            if (tv1.TotalSeconds < tv2.TotalSeconds || tv1.TotalSeconds < tv2.TotalSeconds && tv1.TotalMilliseconds < tv2.TotalMilliseconds)
+            if (tv1 < tv2)
                 return 0;
-            return (uint)((tv1.TotalSeconds - tv2.TotalSeconds) * 1000000 + tv1.TotalMilliseconds - tv2.TotalMilliseconds);
+            return (uint)((tv1.TotalSeconds - tv2.TotalSeconds) * 1000 + tv1.TotalMilliseconds - tv2.TotalMilliseconds);
         }
 
         /// <summary>

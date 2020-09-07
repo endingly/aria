@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace aria
+namespace aria.logger
 {
     class Logger
     {

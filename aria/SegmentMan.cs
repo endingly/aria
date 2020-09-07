@@ -9,7 +9,7 @@ using System.Security;
 using System.Text;
 using System.Threading;
 
-namespace aria
+namespace aria.segment
 {
     /// <summary>
     /// 这个类维护整个下载进程，并一直存在，直到下载结束

@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.Win32.SafeHandles;
+﻿using aria.command;
+using aria.logger;
+using aria.segment;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Timers;
 
-namespace aria
+
+namespace aria.download
 {
     class DownloadEngine
     {
