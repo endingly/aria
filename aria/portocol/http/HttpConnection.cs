@@ -1,16 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Sockets;
 using System.Text;
-using aria.logger;
-using aria.exception;
-using System.Linq;
-using Masuit.Tools.DateTimeExt;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.CodeAnalysis.Operations;
-using System.Globalization;
 
 namespace aria.portocol.http
 {
@@ -20,7 +10,7 @@ namespace aria.portocol.http
         private int cuid;
         private Socket socket;
         private readonly Dictionary<string, string> option; // Option
-        private  Logger logger;
+        private Logger logger;
         #endregion
 
         #region attribute
@@ -67,11 +57,11 @@ namespace aria.portocol.http
                 "Host: " + getHost(req.Host, req.Port) + "\r\n" +
                 "Pragma: no-cache\r\n" +
                 "Cache-Control: no-cache\r\n";
-            if (segment.sp+segment.ds>0)
-                request += "Range: bytes=" + 
-                    Util.Llitos(segment.sp + segment.ds) + 
+            if (segment.sp + segment.ds > 0)
+                request += "Range: bytes=" +
+                    Util.Llitos(segment.sp + segment.ds) +
                     "-" + Util.Llitos(segment.ep) + "\r\n";
-            if (option["http_auth_scheme"]=="BASIC")
+            if (option["http_auth_scheme"] == "BASIC")
                 request += "Authorization: Basic " +
                     Base64.encode(option["http_user"] + ":" + option["http_passwd"]) + "\r\n";
             string cookiesValue = string.Empty;
@@ -89,7 +79,7 @@ namespace aria.portocol.http
 
         }
 
-        public HttpConnection(int cuid,ref Socket socket, Dictionary<string,string> op,ref Logger logger)
+        public HttpConnection(int cuid, ref Socket socket, Dictionary<string, string> op, ref Logger logger)
         {
             this.cuid = cuid;
             this.socket = socket;
@@ -98,7 +88,7 @@ namespace aria.portocol.http
         }
 
         // Encode default
-        public void sendRequest(ref Request req,Segment segment)
+        public void sendRequest(ref Request req, Segment segment)
         {
             string request = createRequest(req, segment);
             logger.Info(Message.MSG_SENDING_HTTP_REQUEST, cuid.ToString(), request);
@@ -110,7 +100,7 @@ namespace aria.portocol.http
         {
             string request = $"CONNECT {req.Host} " +
                 $"{Util.Llitos(req.Port)} HTTP/1.1\r\n" +
-                $"Host: {getHost(req.Host,req.Port)}\r\n";
+                $"Host: {getHost(req.Host, req.Port)}\r\n";
             if (this.UseProxyAuth)
                 request += "Proxy-Authorization: Basic " +
                     Base64.encode(option["http_proxy_user"] + ":" + option["http_proxy_passwd"]) + "\r\n";
@@ -131,7 +121,7 @@ namespace aria.portocol.http
                 while (true)
                 {
                     bufSize += 256;
-                    if (bufSize>2048)
+                    if (bufSize > 2048)
                         throw new DlAbortEx(Message.EX_INVALID_HEADER);
                     buf = new byte[bufSize];
                     socket.Receive(buf);
@@ -140,9 +130,9 @@ namespace aria.portocol.http
                     header = buf.ToString();
                     if (buf.ToString().Substring(0, 1) == "\r\n")
                         throw new DlAbortEx(Message.EX_NO_HEADER);
-                    if(buf.ToString().Contains("\r\n\r\n"))
+                    if (buf.ToString().Contains("\r\n\r\n"))
                     {
-                        buf[Array.IndexOf(buf,"\r\n\r\n")+4]= (byte)'\0';
+                        buf[Array.IndexOf(buf, "\r\n\r\n") + 4] = (byte)'\0';
                         header = buf.ToString();
                         socket.Receive(buf);
                         break;
@@ -158,14 +148,14 @@ namespace aria.portocol.http
             int p, np;
             p = np = 0;
             np = header.IndexOf("\r\n", p);
-            if (np==-1)
+            if (np == -1)
                 throw new DlRetryEx(Message.EX_NO_STATUS_HEADER);
             // 检查状态码
             string status = header.Substring(9, 3);
             p = np + 2;
             // 提取键值对
             np = header.IndexOf("\r\n", p);
-            while (np!=-1&&np!=p)
+            while (np != -1 && np != p)
             {
                 string line = header.Substring(p, np - p);
                 p = np + 2;
@@ -174,11 +164,9 @@ namespace aria.portocol.http
                 headers.Add(hp.Key, hp.Value);
             }
             // TODO rewrite this using strtoul
-            return int.Parse(status,NumberStyles.Integer);
+            return int.Parse(status, NumberStyles.Integer);
         }
 
         #endregion
     }
-
-
 }

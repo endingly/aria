@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace aria.logger
 {
@@ -6,17 +8,17 @@ namespace aria.logger
     {
         public virtual void Debug(params string[] msg)
         {
-            return ;
+            return;
         }
 
-        public virtual void Debug(Exception ex,params string[] msg)
+        public virtual void Debug(Exception ex, params string[] msg)
         {
-            return ;
+            return;
         }
 
         public virtual void Info(params string[] msg)
         {
-            return ;
+            return;
         }
 
         public virtual void Info(Exception ex, params string[] msg)

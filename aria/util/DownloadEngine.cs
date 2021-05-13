@@ -1,13 +1,13 @@
 ﻿using aria.command;
 using aria.logger;
-using aria.segment;
+using aria.diskWriter;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Sockets;
 
 
-namespace aria.download
+namespace aria.util
 {
     class DownloadEngine
     {

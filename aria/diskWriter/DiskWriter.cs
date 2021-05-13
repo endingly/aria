@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace aria
+namespace aria.diskWriter
 {
     /// <summary>
     /// 二进制字节流的写接口

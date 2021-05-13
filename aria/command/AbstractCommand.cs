@@ -1,33 +1,9 @@
-﻿using aria.download;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Mime;
-using System.Net.Sockets;
 using System.Text;
 
 namespace aria.command
 {
-    class Command
-    {
-        protected int cuid { get; set; }
-
-        public Command(int cuid)
-        {
-            this.cuid = cuid;
-        }
-
-        public Command()
-        {
-
-        }
-
-        public virtual bool execute()
-        {
-            return true;
-        }
-    }
-
     class AbstractCommand : Command
     {
         private TimeSpan checkPoint;
@@ -58,7 +34,7 @@ namespace aria.command
             }
         }
 
-        public AbstractCommand(int cuid,  Request req,  DownloadEngine e, Socket s = null)
+        public AbstractCommand(int cuid, Request req, DownloadEngine e, Socket s = null)
         {
             this.cuid = cuid;
             this.req = req;
@@ -86,7 +62,7 @@ namespace aria.command
 
         public virtual bool prepareForRetry()
         {
-            e.commands.Enqueue()
+            e.commands.Enqueue();
         }
 
         public virtual void onError(Exception e)
@@ -142,111 +118,5 @@ namespace aria.command
                     return prepareForRetry();
             }
         }
-    }
-
-    class HttpInitiateConnectionCommand : AbstractCommand
-    {
-        private bool useProxy()
-        {
-            return e.option.ContainsKey("http_proxy_enabled") && e.option["http_proxy_enabled"] == "true";
-        }
-
-        override public bool executeInternal(Segment segment)
-        {
-            Command command = new Command();
-            if (useProxy())
-            {
-                e.logger.Info(Message.MSG_CONNECTING_TO_SERVER,
-                    cuid.ToString(),
-                    e.option["http_proxy_host"],
-                    e.option["http_proxy_port"]
-                    );
-                socket.Connect(e.option["http_proxy_host"], int.Parse(e.option["http_proxy_port"]));
-            }
-            e.commands.Enqueue(command);
-            return true;
-        }
-
-        public HttpInitiateConnectionCommand(int cuid, ref Request req, ref DownloadEngine e)
-        {
-            this.cuid = cuid;
-            this.req = req;
-            this.e = e;
-        }
-
-        public HttpInitiateConnectionCommand()
-        {
-
-        }
-
-    }
-
-    class HttpProxyRequestCommand : AbstractCommand
-    {
-        override public bool executeInternal(Segment segment)
-        {
-            socket.Blocking = false;
-            HttpMessageHandler httpMessageHandler;
-            
-        }
-
-        public HttpProxyRequestCommand(int cuid, ref Request req,ref DownloadEngine e,ref Socket s)
-        {
-            this.cuid = cuid;
-            this.req = req;
-            this.e = e;
-            this.socket = s;
-            this.checkSocketIsWritable = true;
-            e.deleteSocketForReadCheck(socket);
-            e.deleteSocketForWriteCheck(socket);
-        }
-
-        public HttpProxyRequestCommand()
-        {
-
-        }
-    }
-
-    class DownloadCommand : AbstractCommand
-    {
-        public string transferEncoding;
-
-        protected bool executeInternal(Segment segment)
-        {
-            TransferEncoding? te = new TransferEncoding?();
-            if (transferEncoding.Length!=0)
-                te = getTransferEncoding(transferEncoding);
-            int bufSize = 4096;
-            byte[] buf = new byte[bufSize];
-            socket.Receive(buf);
-            if (te!=null)
-            {
-                int infbufSize = 4096;
-
-            }
-        }
-
-        protected bool prepareForRetry()
-        {
-
-        }
-
-        protected bool prepareForNextSegment()
-        {
-
-        }
-
-        public DownloadCommand(int cuid, Request req, DownloadEngine e, Socket s):base(cuid, req, e, s)
-        {
-            
-        }
-
-        public DownloadCommand() { }
-
-        virtual TransferEncoding getTransferEncoding(string transferEncoding)
-        {
-
-        }
-
     }
 }

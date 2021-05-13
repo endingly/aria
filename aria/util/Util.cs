@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace aria
+namespace aria.util
 {
     public static class Util
     {

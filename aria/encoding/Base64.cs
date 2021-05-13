@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace aria
+namespace aria.encoding
 {
     class Base64
     {

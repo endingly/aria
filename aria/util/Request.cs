@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace aria
+namespace aria.util
 {
     /// <summary>
     /// Segment represents a download segment.

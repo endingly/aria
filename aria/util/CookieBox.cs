@@ -4,7 +4,7 @@ using System.Net;
 using System.Text;
 using System.Transactions;
 
-namespace aria
+namespace aria.util
 {
     class CookieBox
     {
