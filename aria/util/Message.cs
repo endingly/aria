@@ -36,5 +36,7 @@ namespace aria.util
      public const string EX_BAD_STATUS= "The response status is not successful. status = %d";
      public const string EX_TOO_LARGE_FILE= "Too large file size. size = %d";
      public const string EX_TRANSFER_ENCODING_NOT_SUPPORTED= "Transfer encoding %s is not supported.";
+     public const string EX_LIMIT_OVERFLOW = "The value exceeds the mathematically defined boundary";
+
     }
 }

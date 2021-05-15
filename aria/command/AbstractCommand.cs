@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Net.Sockets;
+using aria.exception;
+using aria.util;
 
 namespace aria.command
 {
@@ -62,7 +63,8 @@ namespace aria.command
 
         public virtual bool prepareForRetry()
         {
-            e.commands.Enqueue();
+            e.commands.Enqueue(InitiateConnectionCommandFactory.createInitiateConnectionCommand(cuid,ref req,ref e));
+            return true;
         }
 
         public virtual void onError(Exception e)
@@ -75,7 +77,7 @@ namespace aria.command
             return false;
         }
 
-        public bool execute()
+        public bool Execute()
         {
             try
             {

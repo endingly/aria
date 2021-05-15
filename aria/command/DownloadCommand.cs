@@ -1,5 +1,7 @@
-﻿using System;
+﻿using aria.util;
+using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Text;
 
 namespace aria.command
@@ -8,7 +10,7 @@ namespace aria.command
     {
         public string transferEncoding;
 
-        protected bool executeInternal(Segment segment)
+        protected bool ExecuteInternal(Segment segment)
         {
             TransferEncoding? te = new TransferEncoding?();
             if (transferEncoding.Length != 0)
