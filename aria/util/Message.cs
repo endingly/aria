@@ -37,6 +37,6 @@ namespace aria.util
      public const string EX_TOO_LARGE_FILE= "Too large file size. size = %d";
      public const string EX_TRANSFER_ENCODING_NOT_SUPPORTED= "Transfer encoding %s is not supported.";
      public const string EX_LIMIT_OVERFLOW = "The value exceeds the mathematically defined boundary";
-
+     public const string EX_FILE_PATH_NOT_EXISTS = "The file is not exists!";
     }
 }

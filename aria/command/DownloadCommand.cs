@@ -1,4 +1,5 @@
 ﻿using aria.util;
+using aria.encoding;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;

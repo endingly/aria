@@ -36,6 +36,6 @@ namespace aria.diskWriter
         /// <param name="data">the data</param>
         /// <param name="len">the number of bytes to write</param>
         /// <param name="position">the offset of this binary stream</param>
-        public virtual void writeData(char data, int len, long position = 0) { return; }
+        public virtual void writeData(char[] data, int len, long position = 0) { return; }
     }
 }
